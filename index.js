@@ -37,8 +37,13 @@ app.post ('/webhook', (req,res) => {
     //checks this comes from a page subscription
     if (body.object === 'page') {
         body.entry.forEach(function(entry) {
+            //Get the body of the webhook event (the message itself)
             let webhook_event = entry.messaging[0];
             console.log(webhook_event);
+
+            //Get the sender PSID for unique verification
+            let sender_psid = webhook_event.sender_id;
+            console.log('Sender PSID: ' + sender_psid);
 
         });
 
@@ -47,5 +52,26 @@ app.post ('/webhook', (req,res) => {
         res.sendStatus(404);
     }
 });
+
+//Handle message events
+
+function handleMessage(sender_psid, received_message) {
+
+}
+
+//Handle message postback (reply?) events
+function handlePostback(sender_psid, received, postback) {
+
+}
+
+//Send responses via the send API
+function callSendAPI(sender_psid, response) {
+
+}
+
+
+
+
+//GET request test command
 
 // curl -X GET "localhost:1337/webhook?hub.verify_token=EAAITubGZCN4UBADc9ZAoZCLNF0nQeSZC4qmgMyOzwS6Q48N97LMJuGeu9PguOle2nXmZCdeJDlUZAnTDn6TCRS3FSZCTyBQ2jWVtBhEBN5TZBy10qcu6JX25mp5CNkK7RxWGMemCSlAmrYkfrDmhjx1vYYokTAOOYS3n3d51ki89ZAQZDZD&hub.challenge=CHALLENGE_ACCEPTED&hub.mode=subscribe"
