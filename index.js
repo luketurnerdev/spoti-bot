@@ -3,6 +3,8 @@ const bodyParser = require('body-parser');
 const app = express();
 const port = 1337;
 const request = require('request');
+const rp = require('request-promise');
+const fb = require('fb');
 
 const PAGE_ACCESS_TOKEN = "EAAITubGZCN4UBADc9ZAoZCLNF0nQeSZC4qmgMyOzwS6Q48N97LMJuGeu9PguOle2nXmZCdeJDlUZAnTDn6TCRS3FSZCTyBQ2jWVtBhEBN5TZBy10qcu6JX25mp5CNkK7RxWGMemCSlAmrYkfrDmhjx1vYYokTAOOYS3n3d51ki89ZAQZDZD";
 
@@ -28,7 +30,7 @@ app.get('/webhook', (req, res) => {
 app.use(bodyParser.json());
 app.use(bodyParser({extended: true}));
 
-app.get('/verification', require('./controllers/verification'));
+// app.get('/verification', require('./controllers/verification'));
 
 app.listen(port, () => console.log(`Server is running on port ${port}! Congrats.`));
 
@@ -73,7 +75,9 @@ function handleMessage(sender_psid, received_message) {
 
         //Create the payload for a basic text message
         response = {
-            "text": `You sent the message: ${received_message}. Now send me an image!`
+            // "text": `You sent the message: ${received_message.text}. Now send me an image!`
+            "text": `hdfsdf`
+
         }
     }
 
@@ -110,6 +114,75 @@ function callSendAPI(sender_psid, response) {
       }
     }); 
   }
+
+function searchMessageThread() {
+  //We need to do a get request on a conversation thread 
+
+  let frangelicoID = 100027089476303;
+  let franProfile = 334465357466444;
+  let access_token = "EAAITubGZCN4UBAIxtZC0gdKE9rl0xNLjwmKstirYw6ZCB6kkMlvGZAp32hkIHZBEDze2ZAOexsTzLNNNR7BrNU4LLcv9GX5GjJ4tWqEiXcBTUEhkBvQ73eSgu8MNbrx7TdQ8R99n5gLRECc0kOYMfgxlzGKTSUCGwluDrMd294R7A9WqwQOSpifnZAHNBR5WH8ZD";
+  let options = {
+    //My ID with the page
+    //Group chat ID
+    // uri: "https://graph.facebook.com/v3.3/100027089476303/comments",
+    //using conversations endpoint
+    // `graph.facebook.com/{spotibotPageID}fields=conversations${frangelicoID}`
+
+    // uri: `https://graph.facebook.com/412712365999320?fields=conversationsaccess_token=${access_token}`,
+    uri: `https://graph.facebook.com/${spotibotPageID}`,
+
+
+    qs: {
+      access_token : access_token,
+      fields : 'conversations'
+    },
+    headers: {
+      "User-Agent" : "Request-Promise",
+    },
+    json: true //Auto parse the json response
+    };
+
+    //Get request
+
+    rp(options)
+      .then(function (response) {
+        console.log(response);
+        return response;
+      })
+
+      .catch(function (err) {
+        console.log('There was an error' + err);
+      })
+  
+
+
+}
+
+function messageGetRequest() {
+  let frangelicoID = 100027089476303;
+  let spotibotPageID = 412712365999320;
+
+
+  fb.api(
+    `/${spotibotPageID}?access_token=${PAGE_ACCESS_TOKEN}`, 
+    { fields: ['conversations', 'name'] },
+     function (res) {
+
+    if(!res || res.error) {
+      console.log(!res ? 'error occurred' : res.error);
+      return;
+
+    }
+    console.log(res.id);
+    console.log(res.name);
+});
+
+}
+
+// searchMessageThread();
+messageGetRequest();
+
+
 
 
 
